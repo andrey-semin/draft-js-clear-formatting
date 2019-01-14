@@ -95,8 +95,8 @@ const defaultOptions = {
   lists: true
 };
 
-export default (editorState, options) => {
-  const mergedOptions = { ...defaultOptions, ...options };
+export default (editorState, options = {}) => {
+  const mergedOptions = Object.assign(defaultOptions, options)
   const helpers = makeHelpersArray(mergedOptions);
   const newEditorState = helpers.reduce(
     (acc, helper) => helper(acc),
