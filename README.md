@@ -33,11 +33,11 @@ const options = {
 }
 ```
 
- Option   | Description                        | Default value |
-| -------- | ---------------------------------- | ------------- |
-| inline   | If true, removes all inline styles | true          |
-| entities | If true, removes all entities      | true          |
-| lists    | If true, removes all lists         | true          |
+| Option   | Description               | Default value |
+| -------- | ------------------------- | ------------- |
+| inline   | Removes all inline styles | true          |
+| entities | Removes all entities      | true          |
+| lists    | Removes all lists         | true          |
 
 ## TO DO
-[] Add tests
+- [ ] Add tests
