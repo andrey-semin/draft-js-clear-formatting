@@ -1,101 +1,107 @@
-import { Modifier, EditorState, SelectionState } from 'draft-js'
+import { Modifier, EditorState, SelectionState } from 'draft-js';
 
-const styles = ['BOLD', 'ITALIC', 'UNDERLINE']
+const styles = ['BOLD', 'ITALIC', 'UNDERLINE'];
 
 const removeInlineStyles = editorState => {
-  const contentState = editorState.getCurrentContent()
-  const contentWithoutStyles = styles.reduce((acc, style) => Modifier.removeInlineStyle(
-        acc,
-        editorState.getSelection(),
-        style,
-      ), contentState)
+  const contentState = editorState.getCurrentContent();
+  const contentWithoutStyles = styles.reduce(
+    (acc, style) =>
+      Modifier.removeInlineStyle(acc, editorState.getSelection(), style),
+    contentState
+  );
 
   const newEditorState = EditorState.push(
     editorState,
     contentWithoutStyles,
-    'change-inline-style',
-  )
+    'change-inline-style'
+  );
 
-  return newEditorState
-}
+  return newEditorState;
+};
 
 const removeEntities = editorState => {
-  const contentState = editorState.getCurrentContent()
+  const contentState = editorState.getCurrentContent();
   const contentWithoutEntities = Modifier.applyEntity(
     contentState,
     editorState.getSelection(),
-    null,
-  )
+    null
+  );
 
   const newEditorState = EditorState.push(
     editorState,
     contentWithoutEntities,
-    'apply-entity',
-  )
+    'apply-entity'
+  );
 
-  return newEditorState
-}
+  return newEditorState;
+};
 
 export const removeLists = editorState => {
-  const contentState = editorState.getCurrentContent()
-  let contentWithoutLists = contentState
-  let newEditorState = editorState
+  const contentState = editorState.getCurrentContent();
+  let contentWithoutLists = contentState;
+  let newEditorState = editorState;
   const blocksMap = contentState.getBlockMap();
 
   blocksMap.forEach(block => {
-    const blockType = block.getType()
-    if (blockType === 'ordered-list-item' || blockType === 'unordered-list-item') {
-      const selectionState = SelectionState.createEmpty(block.getKey())
+    const blockType = block.getType();
+    if (
+      blockType === 'ordered-list-item' ||
+      blockType === 'unordered-list-item'
+    ) {
+      const selectionState = SelectionState.createEmpty(block.getKey());
       const updatedSelection = selectionState.merge({
         focusOffset: 0,
-        anchorOffset: block.getText().length,
-      })
+        anchorOffset: block.getText().length
+      });
 
       contentWithoutLists = Modifier.setBlockType(
         contentWithoutLists,
         updatedSelection,
-        'unstyled',
-      )
+        'unstyled'
+      );
     }
-  })
+  });
 
   newEditorState = EditorState.push(
     newEditorState,
     contentWithoutLists,
-    'change-block-type',
-  )
+    'change-block-type'
+  );
 
-  return newEditorState
-}
+  return newEditorState;
+};
 
-const makeHelpersArray = (options) => {
-  const helpers = []
+const makeHelpersArray = options => {
+  const helpers = [];
 
   if (options.inline) {
-    helpers.push(removeInlineStyles)
+    helpers.push(removeInlineStyles);
   }
 
   if (options.entities) {
-    helpers.push(removeEntities)
+    helpers.push(removeEntities);
   }
 
   if (options.lists) {
-    helpers.push(removeLists)
+    helpers.push(removeLists);
   }
 
   return helpers;
-}
+};
 
 const defaultOptions = {
   inline: true,
   entities: true,
-  lists: true,
-}
+  lists: true
+};
 
 export default (editorState, options) => {
-  const mergedOptions = {...defaultOptions, ...options}
-  const helpers = makeHelpersArray(mergedOptions)
-  const newEditorState = helpers.reduce((acc, helper) => helper(acc), editorState)
+  const mergedOptions = { ...defaultOptions, ...options };
+  const helpers = makeHelpersArray(mergedOptions);
+  const newEditorState = helpers.reduce(
+    (acc, helper) => helper(acc),
+    editorState
+  );
 
   return newEditorState;
-}
+};
