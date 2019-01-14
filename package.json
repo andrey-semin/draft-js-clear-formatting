@@ -1,0 +1,51 @@
+{
+  "name": "draft-js-clear-formatting",
+  "version": "1.0.0",
+  "description": "Clear all formatting helper for DraftJS",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --ignore __tests__ --out-dir lib",
+    "compile": "npm run build",
+    "precompile": "npm run clean",
+    "clean": "rm -rf ./lib/*",
+    "prepublish": "npm run lint && npm run prettify && npm run compile",
+    "prettify": "prettier src/index.js --write",
+    "lint": "eslint 'src/*.js'",
+    "test": "jest"
+  },
+  "author": {
+    "name": "Andrey Semin",
+    "email": "andreysyomin@yandex.ru"
+  },
+  "license": "MIT",
+  "keywords": [
+    "editor",
+    "wysiwyg",
+    "draft",
+    "draft-js",
+    "draft-js-plugins",
+    "plugins",
+    "plugin",
+    "react",
+    "widget",
+    "react-component",
+    "richtext"
+  ],
+  "peerDependencies": {
+    "draft-js": ">=0.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrey-semin/draft-js-multiline-list-item-plugin.git"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "jest": "^23.5.0",
+    "prettier": "1.14.2"
+  }
+}
